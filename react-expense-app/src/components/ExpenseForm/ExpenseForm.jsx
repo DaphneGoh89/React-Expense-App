@@ -7,13 +7,14 @@ const ExpenseForm = () => {
   const handleExpenseFormSubmit = () => {};
   return (
     <div
+      className="container-fluid"
       style={{
         paddingLeft: "50px",
         paddingRight: "50px",
         paddingTop: "50px",
       }}
     >
-      <h1>New Expense Entry</h1>
+      <h1 className="mb-5">New Expense Entry</h1>
       <form onSubmit={handleExpenseFormSubmit}>
         <Header />
         <Details />

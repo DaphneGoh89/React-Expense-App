@@ -23,3 +23,7 @@ html {
 textarea {
   resize: none;
 }
+
+.wrapper {
+  display: flex;
+}

@@ -3,6 +3,9 @@
   height: 100vh;
   color: var(--color-gray-9);
   box-shadow: 0 5px 8px var(--color-gray-4);
+  background-color: white;
+  /* border-style: solid; */
+  border-radius: 20px;
 }
 
 .ul {
