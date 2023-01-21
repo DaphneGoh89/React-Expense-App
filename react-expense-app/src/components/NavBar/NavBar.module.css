@@ -1,0 +1,22 @@
+.navbar {
+  width: 15%;
+  height: 100vh;
+  color: var(--color-gray-9);
+  box-shadow: 0 5px 8px var(--color-gray-4);
+}
+
+.ul {
+  list-style-type: none;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  padding-left: 10%;
+  /* background-color: green; */
+}
+
+.li {
+  padding-top: 20px;
+}
+
+input {
+  border-radius: 30px;
+}

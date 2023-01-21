@@ -1,0 +1,25 @@
+*,
+::before,
+::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: var(--color-stone-1);
+}
+
+:root {
+  --color-blue-9: #1e3a8a;
+  --color-blue-1: #dbeafe;
+  --color-stone-1: #f5f5f4;
+  --color-gray-4: #9ca3af;
+  --color-gray-9: #111827;
+}
+
+html {
+  font-size: 12px;
+  font-family: helvetica, "sans-serif";
+}
+
+textarea {
+  resize: none;
+}
