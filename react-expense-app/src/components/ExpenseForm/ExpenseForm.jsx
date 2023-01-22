@@ -7,7 +7,7 @@ const ExpenseForm = () => {
   const handleExpenseFormSubmit = () => {};
   return (
     <div
-      className="container-fluid"
+      className="col-md-9" /*"container-fluid"*/
       style={{
         paddingLeft: "50px",
         paddingRight: "50px",

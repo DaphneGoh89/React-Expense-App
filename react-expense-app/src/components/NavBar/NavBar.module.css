@@ -1,25 +1,24 @@
 .navbar {
-  width: 15%;
   height: 100vh;
-  color: var(--color-gray-9);
+  color: "white";
   box-shadow: 0 5px 8px var(--color-gray-4);
-  background-color: white;
-  /* border-style: solid; */
-  border-radius: 20px;
+  background-color: black;
 }
 
 .ul {
   list-style-type: none;
   padding-top: 30px;
   padding-bottom: 30px;
-  padding-left: 10%;
+
   /* background-color: green; */
 }
 
 .li {
   padding-top: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
-input {
-  border-radius: 30px;
+a {
+  color: "white";
 }

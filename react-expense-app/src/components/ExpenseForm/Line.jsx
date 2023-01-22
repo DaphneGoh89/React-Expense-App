@@ -28,6 +28,11 @@ const Line = ({ index }) => {
           name="lineTotal"
         ></input>
       </td>
+      <td>
+        <button type="button" className="btn btn-danger float-right">
+          Delete
+        </button>
+      </td>
     </tr>
   );
 };

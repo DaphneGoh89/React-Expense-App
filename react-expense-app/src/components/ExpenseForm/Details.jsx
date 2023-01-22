@@ -21,6 +21,7 @@ const Details = () => {
             <th>Type</th>
             <th colSpan="2">Description</th>
             <th>Amount</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>{displayRow(rowNum)}</tbody>

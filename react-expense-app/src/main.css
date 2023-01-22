@@ -4,7 +4,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: var(--color-stone-1);
 }
 
 :root {
@@ -13,6 +12,10 @@
   --color-stone-1: #f5f5f4;
   --color-gray-4: #9ca3af;
   --color-gray-9: #111827;
+}
+
+body {
+  background-color: var(--color-stone-1);
 }
 
 html {
@@ -26,4 +29,8 @@ textarea {
 
 .wrapper {
   display: flex;
+}
+
+a {
+  text-decoration: none;
 }
