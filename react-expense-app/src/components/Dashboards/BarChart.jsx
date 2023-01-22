@@ -11,47 +11,73 @@ const BarChart = () => {
   const expenseBarChartRef = useRef();
 
   useEffect(() => {
-    // define margin and dimension
-    const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+    // 1. define margin and dimension
+    const margin = { top: 50, right: 20, bottom: 30, left: 40 };
     let chartWidth =
       parseInt(d3.select("#expenseBarChart").style("width")) -
       margin.left -
       margin.right;
     let chartHeight = 400 - margin.top - margin.bottom;
 
-    // define x and y axis ranges: start value --> end value
-    // define x and y domain (i.e. value range)
+    // 2. create SVG
+    const svg = d3
+      .select(expenseBarChartRef.current)
+      .attr("width", chartWidth + margin.left + margin.right)
+      .attr("height", chartHeight + margin.top + margin.bottom);
+
+    svg
+      .append("rect")
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .attr("fill", "white");
+
+    // 3(a). define x axis range (start to end position) and domain (values on axis)
     const x = d3
       .scaleBand()
       .range([margin.left, chartWidth + margin.left])
       .padding(0.3);
     x.domain(testBarChartData.map((data) => data.month));
 
+    // 3(b). define x axis range (start to end position) and domain (values on axis)
     const y = d3.scaleLinear().range([chartHeight, margin.top]);
     y.domain([0, d3.max(testBarChartData, (data) => data.expenseTotal)]);
 
-    // define width and height of chart area
-    const svg = d3
-      .select(expenseBarChartRef.current)
-      .attr("width", chartWidth + margin.left + margin.right)
-      .attr("height", chartHeight + margin.top + margin.bottom);
+    // 4(a). create chart title
+    svg
+      .append("text")
+      .attr("transform", "translate(0,30)")
+      .style("font-size", "16px")
+      .style("font-color", "black")
+      .text("Expenses By Period");
 
-    // append x axis - move x axis down to bottom
+    // 4(b). append x axis - move x axis down to bottom
     svg
       .append("g")
       .attr("transform", `translate(0, ${chartHeight})`)
       .call(d3.axisBottom(x));
 
-    // append y axis - move y axis to the left
+    // 4(c). append y axis - move y axis to the left
     svg
       .append("g")
       .attr("transform", `translate(${margin.left}, 0)`)
       .call(d3.axisLeft(y));
 
-    // add bars to chart
+    // 4(d). append label to x-axis
+    svg
+      .append("text")
+      .attr(
+        "transform",
+        "translate(" + chartWidth / 2 + " ," + (chartHeight + 30) + ")"
+      )
+      //.style("text-anchor", "middle")
+      .text("Period");
+
+    // 5. add bars to chart
     svg
       .attr("fill", "steelblue")
+      .attr("class", "bar")
       .selectAll("rect")
+      .filter(".bar")
       .data(testBarChartData)
       .join("rect")
       .attr("x", (data) => x(data.month))
@@ -61,7 +87,7 @@ const BarChart = () => {
   });
 
   return (
-    <div id="expenseBarChart" className="col-md-12">
+    <div id="expenseBarChart">
       <svg ref={expenseBarChartRef}></svg>
     </div>
   );
