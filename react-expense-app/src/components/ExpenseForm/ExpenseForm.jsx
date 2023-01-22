@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Header from "./Header";
 import Details from "./Details";
 import Button from "./Button";
@@ -9,9 +10,10 @@ const ExpenseForm = () => {
     <div
       className="col-md-9" /*"container-fluid"*/
       style={{
-        paddingLeft: "50px",
-        paddingRight: "50px",
+        // paddingLeft: "50px",
+        // paddingRight: "50px",
         paddingTop: "50px",
+        margin: "0 auto",
       }}
     >
       <h1 className="mb-5">New Expense Entry</h1>
