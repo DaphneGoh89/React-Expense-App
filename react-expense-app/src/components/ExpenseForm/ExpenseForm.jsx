@@ -3,58 +3,120 @@ import { useSelector, useDispatch } from "react-redux";
 import Header from "./Header";
 import Details from "./Details";
 import Button from "./Button";
+import database from "../../firebase";
+import { ref } from "firebase/database";
+import { useEffect } from "react";
+
 // TODO: refactor to useReducer
+// TODO: validate form
+// TODO: show sum at table footer
+// TODO: clear all table input after submission
 
 const currDate = new Date().toISOString().split("T")[0];
+const initExpenseHeaderState = {
+  accountNo: "account1",
+  createDate: currDate,
+  supplier: "",
+  currency: "",
+  amount: 0,
+  remarks: "",
+};
+
+const initExpenseTableState = [
+  { expenseType: "", description: "", lineTotal: "" },
+  { expenseType: "", description: "", lineTotal: "" },
+  { expenseType: "", description: "", lineTotal: "" },
+  { expenseType: "", description: "", lineTotal: "" },
+  { expenseType: "", description: "", lineTotal: "" },
+];
+
+//===================================================================
+// ExpenseForm Component
+//===================================================================
 
 const ExpenseForm = () => {
   //===================================================================
-  // Declaring state and event handler for <Header />
+  // Declaring states
   //===================================================================
-  const [expenseHeaderData, setExpenseHeaderData] = useState({
-    accountNo: "account1",
-    createDate: currDate,
-    supplier: "",
-    currency: "",
-    amount: 0,
-    remarks: "",
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [expenseHeaderData, setExpenseHeaderData] = useState(
+    initExpenseHeaderState
+  );
 
-  const changeExpenseHeaderData = (e) => {
-    setExpenseHeaderData((prevState) => {
-      return { ...prevState, [e.target.name]: e.target.value };
-    });
+  const [expenseTable, setExpenseTable] = useState(initExpenseTableState);
+  const [activeRow, setActiveRow] = useState(0);
+  const [formData, setFormData] = useState(null);
+
+  //===================================================================
+  // Event handler - <Headers />
+  //===================================================================
+  const changeExpenseHeaderData = (e, action) => {
+    if (action === "reset") {
+      setExpenseHeaderData(initExpenseHeaderState);
+    } else {
+      setExpenseHeaderData((prevState) => {
+        return { ...prevState, [e.target.name]: e.target.value };
+      });
+    }
   };
 
   //===================================================================
-  // Declaring state and event handler for <Details />
+  // Event handlers - <Details />
   //===================================================================
-
-  const [tableRow, setTableRow] = useState([
-    { expenseType: "", description: "", lineTotal: 0 },
-    { expenseType: "", description: "", lineTotal: 0 },
-    { expenseType: "", description: "", lineTotal: 0 },
-    { expenseType: "", description: "", lineTotal: 0 },
-    { expenseType: "", description: "", lineTotal: 0 },
-  ]);
-
   const changeExpenseDetails = (e, i) => {
-    let updatedTableRow = [...tableRow];
-    updatedTableRow[i][e.target.name] = e.target.value;
-    setTableRow(updatedTableRow);
+    setActiveRow(i + 1);
+    let updatedExpenseTable = [...expenseTable];
+    updatedExpenseTable[i][e.target.name] = e.target.value;
+    setExpenseTable(updatedExpenseTable);
   };
 
   const addNewRow = () => {
-    setTableRow((prevState) => {
-      return [...prevState, { expenseType: "", description: "", lineTotal: 0 }];
+    setExpenseTable((prevState) => {
+      return [
+        ...prevState,
+        { expenseType: "", description: "", lineTotal: "" },
+      ];
     });
   };
 
   const deleteRow = (e, removedIndex) => {
-    setTableRow(tableRow.filter((expenseLine, i) => i !== removedIndex));
+    setExpenseTable(
+      expenseTable.filter((expenseLine, i) => i !== removedIndex)
+    );
   };
 
-  const handleExpenseFormSubmit = () => {};
+  //===================================================================
+  // Handle form submmission
+  //===================================================================
+  useEffect(() => {
+    const expenseRecordsRef = ref(database, "expenseRecords");
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    };
+
+    fetch(
+      "https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords.json",
+      requestOptions
+    )
+      .then((response) => setIsLoading(true))
+      .then((data) => {
+        setIsLoading(false);
+        console.log(data);
+      });
+    // reset form state
+    changeExpenseHeaderData(null, "reset");
+    //changeExpenseDetails(null, null, "reset");
+  }, [formData]);
+
+  const handleExpenseFormSubmit = (e) => {
+    e.preventDefault();
+    setFormData({ ...expenseHeaderData, details: expenseTable });
+  };
+  //===================================================================
+  // Display expenseForm
+  //===================================================================
   return (
     <div
       className="col-md-9"
@@ -70,7 +132,8 @@ const ExpenseForm = () => {
           changeExpenseHeaderData={changeExpenseHeaderData}
         />
         <Details
-          tableRow={tableRow}
+          expenseTable={expenseTable}
+          activeRow={activeRow}
           changeExpenseDetails={changeExpenseDetails}
           addNewRow={addNewRow}
           deleteRow={deleteRow}

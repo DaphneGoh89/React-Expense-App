@@ -33,7 +33,8 @@ const NavBar = () => {
         <ul className={styles.ul}>
           <li className={styles.li}>
             <Link to="/expenseform">
-              <AiOutlineForm /> {open && "Expense Form"}
+              <AiOutlineForm />{" "}
+              {open && <span className="pl-4">Expense Form</span>}
             </Link>
           </li>
           <li className={styles.li}>
