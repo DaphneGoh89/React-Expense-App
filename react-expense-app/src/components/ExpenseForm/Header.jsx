@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 
-const Header = () => {
-  // this can be moved to redux or to app.jsx
-  const [header, setHeader] = useState({
-    accountNo: "",
-    createDate: "",
-    supplier: "",
-    currency: "",
-    amount: "",
-    remarks: "",
-  });
-
-  const handleInputChange = (e) => {};
+const Header = ({
+  accountNo,
+  createDate,
+  supplier,
+  currency,
+  amount,
+  remarks,
+  changeExpenseHeaderData,
+}) => {
   return (
     <>
       <div className="form-group mb-3">
@@ -20,7 +17,8 @@ const Header = () => {
           className="form-select"
           id="accountNo"
           name="accountNo"
-          onChange={handleInputChange}
+          value={accountNo}
+          onChange={changeExpenseHeaderData}
         >
           <option value="account1">Account 1</option>
           <option value="account2">Account 2</option>
@@ -33,8 +31,8 @@ const Header = () => {
           type="date"
           id="createDate"
           name="createDate"
-          value=""
-          onChange={handleInputChange}
+          value={createDate}
+          onChange={changeExpenseHeaderData}
         />
       </div>
       <div className="form-group mb-3">
@@ -44,8 +42,8 @@ const Header = () => {
           type="text"
           id="supplier"
           name="supplier"
-          value=""
-          onChange={handleInputChange}
+          value={supplier}
+          onChange={changeExpenseHeaderData}
         />
       </div>
 
@@ -56,8 +54,8 @@ const Header = () => {
           type="text"
           id="currency"
           name="currency"
-          value=""
-          onChange={handleInputChange}
+          value={currency}
+          onChange={changeExpenseHeaderData}
         />
       </div>
       <div className="form-group mb-3">
@@ -67,8 +65,8 @@ const Header = () => {
           type="number"
           id="amount"
           name="amount"
-          value=""
-          onChange={handleInputChange}
+          value={amount}
+          onChange={changeExpenseHeaderData}
         />
       </div>
 
@@ -79,9 +77,9 @@ const Header = () => {
           type="text"
           id="remarks"
           name="remarks"
-          value=""
+          value={remarks}
           rows="3"
-          onChange={handleInputChange}
+          onChange={changeExpenseHeaderData}
         />
       </div>
     </>
