@@ -19,7 +19,7 @@ const ExpenseTable = ({ data }) => {
         </thead>
         <tbody>
           {data.map((d, i) => {
-            return <ExpenseTableLine {...d} key={i} />;
+            return <ExpenseTableLine {...d} key={d.id} />;
           })}
         </tbody>
       </table>
