@@ -17,7 +17,7 @@ const initExpenseHeaderState = {
   accountNo: "account1",
   createDate: currDate,
   supplier: "",
-  currency: "",
+  currency: "SGD",
   amount: 0,
   remarks: "",
 };

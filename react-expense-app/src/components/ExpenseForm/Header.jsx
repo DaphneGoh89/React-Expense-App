@@ -55,6 +55,7 @@ const Header = ({
           id="currency"
           name="currency"
           value={currency}
+          disabled={true}
           onChange={changeExpenseHeaderData}
         />
       </div>

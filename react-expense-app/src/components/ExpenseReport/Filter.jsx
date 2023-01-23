@@ -1,19 +1,35 @@
 import React from "react";
 
-const Filter = () => {
-  const handleInputChange = () => {};
-
+const Filter = ({
+  createDateFrom,
+  setCreateDateFrom,
+  createDateTo,
+  setCreateDateTo,
+  supplier,
+  setSupplier,
+}) => {
   return (
     <>
       <div className="form-group mb-3">
-        <label htmlFor="createDate">Date</label>
+        <label htmlFor="createDateFrom">Date From</label>
         <input
           className="form-control"
           type="date"
-          id="createDate"
-          name="createDate"
-          value=""
-          onChange={handleInputChange}
+          id="createDateFrom"
+          name="createDateFrom"
+          value={createDateFrom}
+          onChange={(e) => setCreateDateFrom(e.target.value)}
+        />
+      </div>
+      <div className="form-group mb-3">
+        <label htmlFor="createDateTo">Date To</label>
+        <input
+          className="form-control"
+          type="date"
+          id="createDateTo"
+          name="createDateTo"
+          value={createDateTo}
+          onChange={(e) => setCreateDateTo(e.target.value)}
         />
       </div>
       <div className="form-group mb-3">
@@ -23,8 +39,8 @@ const Filter = () => {
           type="text"
           id="supplier"
           name="supplier"
-          value=""
-          onChange={handleInputChange}
+          value={supplier}
+          onChange={(e) => setSupplier(e.target.value)}
         />
       </div>
     </>

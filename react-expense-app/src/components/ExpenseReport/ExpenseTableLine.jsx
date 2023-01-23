@@ -1,10 +1,16 @@
 import React from "react";
 
-const ExpenseTableLine = ({ date, supplier, remarks, currency, amount }) => {
+const ExpenseTableLine = ({
+  createDate,
+  supplier,
+  remarks,
+  currency,
+  amount,
+}) => {
   return (
     <>
       <tr>
-        <td>{date}</td>
+        <td>{createDate}</td>
         <td>{supplier}</td>
         <td>{remarks}</td>
         <td>{currency}</td>
