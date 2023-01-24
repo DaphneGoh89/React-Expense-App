@@ -6,13 +6,13 @@ import Button from "./Button";
 import database from "../../firebase";
 import { ref } from "firebase/database";
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 
 // TODO: refactor to useReducer
 // TODO: validate form
 // TODO: show sum at table footer
-// TODO: show only 5 empty rows after form submission
+// TODO: clear all table input after submission
 
+// Initial states
 const currDate = new Date().toISOString().split("T")[0];
 const initExpenseHeaderState = {
   accountNo: "account1",
@@ -23,6 +23,11 @@ const initExpenseHeaderState = {
   remarks: "",
 };
 
+const initRowState = {
+  expenseType: "",
+  description: "",
+  lineTotal: "",
+};
 const initExpenseTableState = [
   { expenseType: "", description: "", lineTotal: "" },
   { expenseType: "", description: "", lineTotal: "" },
@@ -30,10 +35,6 @@ const initExpenseTableState = [
   { expenseType: "", description: "", lineTotal: "" },
   { expenseType: "", description: "", lineTotal: "" },
 ];
-
-//===================================================================
-// ExpenseForm Component
-//===================================================================
 
 const ExpenseForm = () => {
   //===================================================================
@@ -43,15 +44,14 @@ const ExpenseForm = () => {
   const [expenseHeaderData, setExpenseHeaderData] = useState(
     initExpenseHeaderState
   );
-
   const [expenseTable, setExpenseTable] = useState(initExpenseTableState);
+  const [rowNum, setRowNum] = useState(5); // new
+  const [rowState, setRowState] = useState(initRowState); // new
   const [activeRow, setActiveRow] = useState(0);
   const [formData, setFormData] = useState(null);
-  const location = useLocation();
-  console.log("location", location);
 
   //===================================================================
-  // Event handler - <Headers />
+  // Event handler - <Headers /> - OKAY
   //===================================================================
   const changeExpenseHeaderData = (e, action) => {
     if (action === "reset") {
@@ -66,22 +66,11 @@ const ExpenseForm = () => {
   //===================================================================
   // Event handlers - <Details />
   //===================================================================
-  const changeExpenseDetails = (e, i, action) => {
-    if (action === "reset") {
-      let resetExpenseTable = [...expenseTable];
-      for (let row = 0; row < resetExpenseTable.length; row++) {
-        for (let col in resetExpenseTable[row]) {
-          resetExpenseTable[row][col] = "";
-        }
-      }
-      setExpenseTable(resetExpenseTable);
-      setActiveRow(0);
-    } else {
-      setActiveRow(i + 1);
-      let updatedExpenseTable = [...expenseTable];
-      updatedExpenseTable[i][e.target.name] = e.target.value;
-      setExpenseTable(updatedExpenseTable);
-    }
+  const changeExpenseDetails = (e, i) => {
+    setActiveRow(i + 1);
+    let updatedExpenseTable = [...expenseTable];
+    updatedExpenseTable[i][e.target.name] = e.target.value;
+    setExpenseTable(updatedExpenseTable);
   };
 
   const addNewRow = () => {
@@ -121,7 +110,7 @@ const ExpenseForm = () => {
       });
     // reset form state
     changeExpenseHeaderData(null, "reset");
-    changeExpenseDetails(null, null, "reset");
+    //changeExpenseDetails(null, null, "reset");
   }, [formData]);
 
   const handleExpenseFormSubmit = (e) => {
@@ -148,6 +137,7 @@ const ExpenseForm = () => {
         <Details
           expenseTable={expenseTable}
           activeRow={activeRow}
+          rowNum={rowNum}
           changeExpenseDetails={changeExpenseDetails}
           addNewRow={addNewRow}
           deleteRow={deleteRow}

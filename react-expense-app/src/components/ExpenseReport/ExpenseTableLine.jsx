@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ExpenseTableLine = ({
   id,
@@ -8,8 +9,9 @@ const ExpenseTableLine = ({
   currency,
   amount,
 }) => {
+  const navigate = useNavigate();
   const [error, setError] = useState(null);
-  const [confirmDeletion, setConfirmDeletion] = useState(false);
+  const [confirmDeletion, setConfirmDeletion] = useState(false); // can keep for later (use modal to give warning before deletion)
   const [idToDelete, setIdToDelete] = useState(null);
   let baseURL =
     "https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords/";
@@ -50,7 +52,6 @@ const ExpenseTableLine = ({
 
   const handleDeletion = () => {
     setIdToDelete(id);
-    console.log("todelete", id);
   };
 
   return (
@@ -62,7 +63,11 @@ const ExpenseTableLine = ({
         <td>{currency}</td>
         <td>{amount}</td>
         <td className="float-right">
-          <button className="btn btn-warning float-right" type="button">
+          <button
+            className="btn btn-warning float-right"
+            type="button"
+            onClick={() => navigate("/expenseform", { state: { id: id } })}
+          >
             Update
           </button>
         </td>

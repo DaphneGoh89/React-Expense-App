@@ -8,6 +8,7 @@ import {
   AiOutlineUnorderedList,
 } from "react-icons/ai";
 import { IconContext } from "react-icons";
+import { useParams } from "react-router-dom";
 
 const NavBar = () => {
   const [open, setOpen] = useState(true);

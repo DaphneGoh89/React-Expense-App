@@ -2,66 +2,48 @@ import React, { useState } from "react";
 import Filter from "./Filter";
 import ExpenseTable from "./ExpenseTable";
 import { useEffect } from "react";
+import useFetch from "../../customHooks/useFetch";
+// TODO: To show "no record found" if no data is retrieved
 
 const currDate = new Date().toISOString().split("T")[0];
 
 const ExpenseReport = () => {
+  // getData parameters
+  const firebaseURL =
+    "https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords.json";
+
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+  const { getData, data, loading, error } = useFetch();
+
+  // run getData when page loads
   const [createDateFrom, setCreateDateFrom] = useState(currDate);
   const [createDateTo, setCreateDateTo] = useState(currDate);
   const [supplier, setSupplier] = useState("");
   const [hasSubmitted, setHasSubmitted] = useState(false);
-  // const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [data, setData] = useState([]);
+  const [expenseData, setExpenseData] = useState([]);
 
-  const firebaseURL =
-    "https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords.json";
-
-  //===========================================================
-  // TODO: call fetch API to get data from Firebase - DONE
-  //===========================================================
   useEffect(() => {
-    const controller = new AbortController();
-    fetchData(firebaseURL, controller.signal);
-    setHasSubmitted(false);
+    getData(firebaseURL, requestOptions);
 
-    return () => {
-      controller.abort();
-    };
-  }, [hasSubmitted]);
-
-  //===========================================================
-  // TODO: async call API function - DONE
-  //===========================================================
-  const fetchData = async (url) => {
-    // setLoading = true;
-    setError(null);
-    setData(null);
+    // filtered data based on search parameter
     let filteredData = [];
-
-    const requestOptions = {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    };
-
-    try {
-      const response = await fetch(url, requestOptions);
-      const result = await response.json();
-      for (let record in result) {
-        let matchedRecord = { ...result[record], id: record };
-        // state your condition here
-        if (matchedRecord.supplier.includes(supplier)) {
-          filteredData.push(matchedRecord);
-        }
-      }
-      setData(filteredData);
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        setError(error.message);
+    for (let record in data) {
+      let recordWithId = { ...data[record], id: record };
+      // state your condition here
+      if (
+        recordWithId.supplier.includes(supplier) &&
+        recordWithId.createDate >= createDateFrom &&
+        recordWithId.createDate <= createDateTo
+      ) {
+        filteredData.push(recordWithId);
       }
     }
-    // setLoading(false);
-  };
+    setHasSubmitted(false);
+    setExpenseData(filteredData);
+  }, [hasSubmitted]);
 
   //===========================================================
   // Handle form submission
@@ -70,6 +52,8 @@ const ExpenseReport = () => {
     e.preventDefault();
     setHasSubmitted(true);
   };
+
+  // return component
   return (
     <div
       className="col-md-9"
@@ -92,7 +76,10 @@ const ExpenseReport = () => {
           Submit
         </button>
       </form>
-      {data && <ExpenseTable data={data} />}
+
+      {/* {loading && <p>Loading.. please wait..</p>}
+      {error && <p>Error: Something went wrong..</p>} */}
+      <ExpenseTable data={expenseData} />
     </div>
   );
 };
