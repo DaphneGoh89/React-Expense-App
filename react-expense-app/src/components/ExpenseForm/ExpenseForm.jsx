@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Header from "./Header";
 import Details from "./Details";
 import Button from "./Button";
 import database from "../../firebase";
 import { ref } from "firebase/database";
-import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import useFetch from "../../customHooks/useFetch";
 
 // TODO: refactor to useReducer
 // TODO: validate form
@@ -31,10 +31,6 @@ const initExpenseTableState = [
   { expenseType: "", description: "", lineTotal: "" },
 ];
 
-//===================================================================
-// ExpenseForm Component
-//===================================================================
-
 const ExpenseForm = () => {
   //===================================================================
   // Declaring states
@@ -43,11 +39,19 @@ const ExpenseForm = () => {
   const [expenseHeaderData, setExpenseHeaderData] = useState(
     initExpenseHeaderState
   );
-
   const [expenseTable, setExpenseTable] = useState(initExpenseTableState);
   const [activeRow, setActiveRow] = useState(0);
   const [formData, setFormData] = useState(null);
   const location = useLocation();
+  const { getData, loading, data, error } = useFetch();
+  const firebaseURL =
+    "https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords.json";
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData),
+  };
+
   console.log("location", location);
 
   //===================================================================
@@ -104,21 +108,8 @@ const ExpenseForm = () => {
   //===================================================================
   useEffect(() => {
     const expenseRecordsRef = ref(database, "expenseRecords");
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    };
+    getData(firebaseURL, requestOptions);
 
-    fetch(
-      "https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords.json",
-      requestOptions
-    )
-      .then((response) => setIsLoading(true))
-      .then((data) => {
-        setIsLoading(false);
-        console.log(data);
-      });
     // reset form state
     changeExpenseHeaderData(null, "reset");
     changeExpenseDetails(null, null, "reset");
