@@ -25,14 +25,15 @@ const ExpenseReport = () => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [expenseData, setExpenseData] = useState([]);
 
+  // call getData() when form is submitted
   useEffect(() => {
     getData(firebaseURL, requestOptions);
 
-    // filtered data based on search parameter
+    // filtered fetched data based on search parameter
     let filteredData = [];
     for (let record in data) {
       let recordWithId = { ...data[record], id: record };
-      // state your condition here
+
       if (
         recordWithId.supplier.includes(supplier) &&
         recordWithId.createDate >= createDateFrom &&

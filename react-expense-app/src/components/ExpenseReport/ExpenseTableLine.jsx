@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useFetch from "../../customHooks/useFetch";
 
 const ExpenseTableLine = ({
   id,
@@ -10,18 +11,22 @@ const ExpenseTableLine = ({
   amount,
 }) => {
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
+  const { getData, loading, data, error } = useFetch();
   const [confirmDeletion, setConfirmDeletion] = useState(false); // can keep for later (use modal to give warning before deletion)
   const [idToDelete, setIdToDelete] = useState(null);
   let baseURL =
     "https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords/";
+  const requestOptions = {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  };
 
   //===========================================================================
   // Handle Deletion
   //===========================================================================
   useEffect(() => {
     const controller = new AbortController();
-    fetchData(`${baseURL}/${idToDelete}.json`, controller.signal);
+    getData(`${baseURL}/${idToDelete}.json`, requestOptions);
     setIdToDelete(null);
 
     return () => {
@@ -29,27 +34,7 @@ const ExpenseTableLine = ({
     };
   }, [idToDelete]);
 
-  // TODO: refactor here
-  const fetchData = async (url) => {
-    // setLoading = true;
-    setError(null);
-
-    const requestOptions = {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    };
-
-    try {
-      const response = await fetch(url, requestOptions);
-      const result = await response.json();
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        setError(error.message);
-      }
-    }
-    // setLoading(false);
-  };
-
+  // delete onClick event listener
   const handleDeletion = () => {
     setIdToDelete(id);
   };
