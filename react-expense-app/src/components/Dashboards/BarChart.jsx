@@ -14,7 +14,7 @@ const BarChart = () => {
     // 1. define margin and dimension
     const margin = { top: 40, right: 20, bottom: 10, left: 70 };
     let chartWidth =
-      parseInt(d3.select("#expenseBarChart").style("width")) * 0.9 -
+      parseInt(d3.select("#expenseBarChart").style("width")) -
       margin.left -
       margin.right;
     let chartHeight = 350 - margin.top - margin.bottom;

@@ -49,14 +49,14 @@ const Dashboards = () => {
   return (
     <div className="col-md-9 dashboard" style={{ margin: "0 auto" }}>
       <div className="w-100 h-50 row pt-3">
-        <div className="col-md-6" style={{ background: "blue" }}>
+        <div className="col-md-6">
           <BarChart />
         </div>
-        <div className="col-md-6" style={{ background: "green" }}>
+        <div className="col-md-6">
           <PieChart />
         </div>
       </div>
-      <div className="w-100 h-50" style={{ background: "yellow" }}>
+      <div className="w-100 h-50">
         <LineChart />
       </div>
     </div>

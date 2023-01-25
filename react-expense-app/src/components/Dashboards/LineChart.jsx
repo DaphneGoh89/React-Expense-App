@@ -8,11 +8,11 @@ const LineChart = ({ data }) => {
     // 1. define margin and dimension
     const margin = { top: 50, right: 20, bottom: 50, left: 70 };
     let chartWidth =
-      parseInt(d3.select("#expenseLineChart").style("width")) * 0.9 -
+      parseInt(d3.select("#expenseLineChart").style("width")) -
       margin.left -
       margin.right;
     let chartHeight =
-      parseInt(d3.select("#expenseLineChart").style("height")) * 0.9 -
+      parseInt(d3.select("#expenseLineChart").style("height")) * 0.95 -
       margin.top -
       margin.bottom;
 
