@@ -1,23 +1,20 @@
 import React, { useRef, useEffect } from "react";
-//import * as d3 from "d3";
 import { testBarChartData } from "./testData";
 
 const LineChart = ({ data }) => {
   const expenseLineChartRef = useRef();
 
   useEffect(() => {
-    // setup SVG
-    // setup scaling
-    // set the axes
-    // setup data for SVG
-
     // 1. define margin and dimension
     const margin = { top: 50, right: 20, bottom: 50, left: 70 };
     let chartWidth =
-      parseInt(d3.select("#expenseLineChart").style("width")) -
+      parseInt(d3.select("#expenseLineChart").style("width")) * 0.9 -
       margin.left -
       margin.right;
-    let chartHeight = 350 - margin.top - margin.bottom;
+    let chartHeight =
+      parseInt(d3.select("#expenseLineChart").style("height")) * 0.9 -
+      margin.top -
+      margin.bottom;
 
     // 2. create SVG
     const svg = d3
@@ -81,8 +78,8 @@ const LineChart = ({ data }) => {
       .attr("x", chartWidth / 2 + margin.left)
       .attr("y", margin.top / 2)
       .attr("text-anchor", "middle")
-      .attr("font-color", "steelblue")
-      .style("font-size", 20)
+      .style("fill", "gray")
+      .style("font-size", 16)
       .text("Trend Analysis");
 
     // add x-label
@@ -100,16 +97,16 @@ const LineChart = ({ data }) => {
       .attr("text-anchor", "middle")
       .attr(
         "transform",
-        "translate(20," +
-          (chartHeight + margin.top + margin.bottom) / 2 +
-          ")rotate(-90)"
+        `translate(20,
+          ${(chartHeight + margin.top + margin.bottom) / 2}
+          )rotate(-90)`
       )
       .style("font-size", 12)
       .text("Expense Amount ($)");
   }, [data]);
 
   return (
-    <div id="expenseLineChart">
+    <div id="expenseLineChart" className="h-100">
       <svg ref={expenseLineChartRef}></svg>
     </div>
   );

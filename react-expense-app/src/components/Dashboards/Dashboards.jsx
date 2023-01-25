@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import BarChart from "./BarChart";
+import PieChart from "./PieChart";
 import LineChart from "./LineChart";
 import styles from "./Dashboards.module.css";
 import useFetch from "../../customHooks/useFetch";
@@ -46,16 +47,16 @@ const Dashboards = () => {
   }, []);
 
   return (
-    <div className="col-md-10">
-      <div className="row mt-4 mb-4">
-        <div className="col-md-6 ml-5 mr-5">
+    <div className="col-md-9 dashboard" style={{ margin: "0 auto" }}>
+      <div className="w-100 h-50 row pt-3">
+        <div className="col-md-6" style={{ background: "blue" }}>
           <BarChart />
         </div>
-        <div className="col-md-6 mr-5">
-          <BarChart />
+        <div className="col-md-6" style={{ background: "green" }}>
+          <PieChart />
         </div>
       </div>
-      <div>
+      <div className="w-100 h-50" style={{ background: "yellow" }}>
         <LineChart />
       </div>
     </div>

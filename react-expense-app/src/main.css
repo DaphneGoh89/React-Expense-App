@@ -16,6 +16,7 @@
 
 body {
   background-color: var(--color-stone-1);
+  height: 100vh;
 }
 
 html {
@@ -33,4 +34,8 @@ textarea {
 
 a {
   text-decoration: none;
+}
+
+.dashboard svg {
+  box-shadow: 5px 10px 18px #dddddd;
 }

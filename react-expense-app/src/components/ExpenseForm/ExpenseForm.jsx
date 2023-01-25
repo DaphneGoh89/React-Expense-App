@@ -123,13 +123,14 @@ const ExpenseForm = () => {
   //===================================================================
   return (
     <div
-      className="col-md-9"
+      className="col-md-9 h-100"
       style={{
         paddingTop: "20px",
         margin: "0 auto",
+        height: "100vh",
       }}
     >
-      <h1 className="mb-5">New Expense Entry</h1>
+      <h1 className="mb-3">New Expense Entry</h1>
       <form onSubmit={handleExpenseFormSubmit}>
         <Header
           {...expenseHeaderData}

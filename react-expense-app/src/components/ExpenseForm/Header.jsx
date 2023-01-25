@@ -79,7 +79,7 @@ const Header = ({
           id="remarks"
           name="remarks"
           value={remarks}
-          rows="3"
+          rows="2"
           onChange={changeExpenseHeaderData}
         />
       </div>

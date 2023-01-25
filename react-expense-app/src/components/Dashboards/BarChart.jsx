@@ -12,12 +12,13 @@ const BarChart = () => {
 
   useEffect(() => {
     // 1. define margin and dimension
-    const margin = { top: 50, right: 20, bottom: 30, left: 40 };
+    const margin = { top: 40, right: 20, bottom: 10, left: 70 };
     let chartWidth =
-      parseInt(d3.select("#expenseBarChart").style("width")) -
+      parseInt(d3.select("#expenseBarChart").style("width")) * 0.9 -
       margin.left -
       margin.right;
     let chartHeight = 350 - margin.top - margin.bottom;
+    console.log("barchart width", chartWidth, "barchart height", chartHeight);
 
     // 2. create SVG
     const svg = d3
@@ -40,15 +41,19 @@ const BarChart = () => {
 
     // 3(b). define x axis range (start to end position) and domain (values on axis)
     const y = d3.scaleLinear().range([chartHeight, margin.top]);
-    y.domain([0, d3.max(testBarChartData, (data) => data.expenseTotal)]);
+    y.domain([0, d3.max(testBarChartData, (data) => data.expenseTotal) + 100]);
 
     // 4(a). create chart title
     svg
       .append("text")
-      .attr("transform", "translate(0,30)")
-      .style("font-size", "16px")
-      .style("font-color", "black")
-      .text("Expenses By Period");
+      .attr(
+        "transform",
+        `translate(${(chartWidth + margin.left + margin.right) / 2},40)`
+      )
+      .attr("text-anchor", "middle")
+      .style("font-size", 16)
+      .style("fill", "gray")
+      .text("Expense Analysis By Period");
 
     // 4(b). append x axis - move x axis down to bottom
     svg
@@ -67,10 +72,26 @@ const BarChart = () => {
       .append("text")
       .attr(
         "transform",
-        "translate(" + chartWidth / 2 + " ," + (chartHeight + 30) + ")"
+        `translate(${(chartWidth + margin.left + margin.right) / 2} , ${
+          margin.top + chartHeight - margin.bottom / 2
+        })`
       )
-      //.style("text-anchor", "middle")
+      .style("text-anchor", "middle")
+      .style("font-size", 12)
       .text("Period");
+
+    // add y-label
+    svg
+      .append("text")
+      .attr("text-anchor", "middle")
+      .attr(
+        "transform",
+        "translate(20," +
+          (chartHeight + margin.top + margin.bottom) / 2 +
+          ")rotate(-90)"
+      )
+      .style("font-size", 12)
+      .text("Expense Amount ($)");
 
     // 5. add bars to chart
     svg
@@ -87,7 +108,7 @@ const BarChart = () => {
   });
 
   return (
-    <div id="expenseBarChart">
+    <div id="expenseBarChart" className="h-100">
       <svg ref={expenseBarChartRef}></svg>
     </div>
   );
