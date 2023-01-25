@@ -52,7 +52,9 @@ const ExpenseTableLine = ({
             className="btn btn-warning float-right"
             type="button"
             onClick={() =>
-              navigate("/expenseform", { state: { id: id, action: "update" } })
+              navigate("/expenseupdate", {
+                state: { id: id, action: "update" },
+              })
             }
           >
             Update

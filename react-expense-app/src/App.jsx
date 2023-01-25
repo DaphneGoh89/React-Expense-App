@@ -4,6 +4,7 @@ import NavBar from "./components/NavBar/NavBar";
 import ExpenseForm from "./components/ExpenseForm/ExpenseForm";
 import Dashboards from "./components/Dashboards/Dashboards";
 import ExpenseReport from "./components/ExpenseReport/ExpenseReport";
+import ExpenseUpdateForm from "./components/ExpenseForm/expenseUpdateForm";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/expenseform" element={<ExpenseForm />} />
           <Route path="/dashboards" element={<Dashboards />} />
           <Route path="/expensereport" element={<ExpenseReport />} />
+          <Route path="/expenseupdate" element={<ExpenseUpdateForm />} />
         </Routes>
       </div>
     </div>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import Header from "./Header";
 import Details from "./Details";
 import Button from "./Button";
@@ -35,6 +34,8 @@ const ExpenseForm = () => {
   //===================================================================
   // Declaring states
   //===================================================================
+  const location = useLocation();
+
   const [isLoading, setIsLoading] = useState(false);
   const [expenseHeaderData, setExpenseHeaderData] = useState(
     initExpenseHeaderState
@@ -42,7 +43,7 @@ const ExpenseForm = () => {
   const [expenseTable, setExpenseTable] = useState(initExpenseTableState);
   const [activeRow, setActiveRow] = useState(0);
   const [formData, setFormData] = useState(null);
-  const location = useLocation();
+
   const { getData, loading, data, error } = useFetch();
   const firebaseURL =
     "https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords.json";
@@ -51,8 +52,6 @@ const ExpenseForm = () => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData),
   };
-
-  console.log("location", location);
 
   //===================================================================
   // Event handler - <Headers />
@@ -126,7 +125,7 @@ const ExpenseForm = () => {
     <div
       className="col-md-9"
       style={{
-        paddingTop: "50px",
+        paddingTop: "20px",
         margin: "0 auto",
       }}
     >

@@ -17,7 +17,7 @@ const BarChart = () => {
       parseInt(d3.select("#expenseBarChart").style("width")) -
       margin.left -
       margin.right;
-    let chartHeight = 400 - margin.top - margin.bottom;
+    let chartHeight = 350 - margin.top - margin.bottom;
 
     // 2. create SVG
     const svg = d3

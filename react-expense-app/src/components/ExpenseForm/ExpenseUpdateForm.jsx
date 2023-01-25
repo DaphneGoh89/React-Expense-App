@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Details from "./Details";
 import Button from "./Button";
 import database from "../../firebase";
 import { ref } from "firebase/database";
-import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import useFetch from "../../customHooks/useFetch";
+console.log("anything", useFetch);
 
 // TODO: refactor to useReducer
 // TODO: validate form
 // TODO: show sum at table footer
-// TODO: clear all table input after submission
+// TODO: show only 5 empty rows after form submission
 
-// Initial states
 const currDate = new Date().toISOString().split("T")[0];
 const initExpenseHeaderState = {
   accountNo: "account1",
@@ -23,11 +23,6 @@ const initExpenseHeaderState = {
   remarks: "",
 };
 
-const initRowState = {
-  expenseType: "",
-  description: "",
-  lineTotal: "",
-};
 const initExpenseTableState = [
   { expenseType: "", description: "", lineTotal: "" },
   { expenseType: "", description: "", lineTotal: "" },
@@ -36,22 +31,35 @@ const initExpenseTableState = [
   { expenseType: "", description: "", lineTotal: "" },
 ];
 
-const ExpenseForm = () => {
+const ExpenseUpdateForm = () => {
   //===================================================================
   // Declaring states
   //===================================================================
+  const location = useLocation();
+  console.log(location.state.id);
   const [isLoading, setIsLoading] = useState(false);
   const [expenseHeaderData, setExpenseHeaderData] = useState(
     initExpenseHeaderState
   );
   const [expenseTable, setExpenseTable] = useState(initExpenseTableState);
-  const [rowNum, setRowNum] = useState(5); // new
-  const [rowState, setRowState] = useState(initRowState); // new
   const [activeRow, setActiveRow] = useState(0);
   const [formData, setFormData] = useState(null);
 
+  const { getData, loading, data, error } = useFetch();
+  const firebaseURL = `https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords/${location.state.id}.json`;
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+
+  useEffect(() => {
+    const expenseRecordsRef = ref(database, "expenseRecords");
+    getData(firebaseURL, requestOptions);
+    console.log("data from fetch", data);
+  });
+
   //===================================================================
-  // Event handler - <Headers /> - OKAY
+  // Event handler - <Headers />
   //===================================================================
   const changeExpenseHeaderData = (e, action) => {
     if (action === "reset") {
@@ -66,11 +74,22 @@ const ExpenseForm = () => {
   //===================================================================
   // Event handlers - <Details />
   //===================================================================
-  const changeExpenseDetails = (e, i) => {
-    setActiveRow(i + 1);
-    let updatedExpenseTable = [...expenseTable];
-    updatedExpenseTable[i][e.target.name] = e.target.value;
-    setExpenseTable(updatedExpenseTable);
+  const changeExpenseDetails = (e, i, action) => {
+    if (action === "reset") {
+      let resetExpenseTable = [...expenseTable];
+      for (let row = 0; row < resetExpenseTable.length; row++) {
+        for (let col in resetExpenseTable[row]) {
+          resetExpenseTable[row][col] = "";
+        }
+      }
+      setExpenseTable(resetExpenseTable);
+      setActiveRow(0);
+    } else {
+      setActiveRow(i + 1);
+      let updatedExpenseTable = [...expenseTable];
+      updatedExpenseTable[i][e.target.name] = e.target.value;
+      setExpenseTable(updatedExpenseTable);
+    }
   };
 
   const addNewRow = () => {
@@ -93,24 +112,11 @@ const ExpenseForm = () => {
   //===================================================================
   useEffect(() => {
     const expenseRecordsRef = ref(database, "expenseRecords");
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    };
+    getData(firebaseURL, requestOptions);
 
-    fetch(
-      "https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords.json",
-      requestOptions
-    )
-      .then((response) => setIsLoading(true))
-      .then((data) => {
-        setIsLoading(false);
-        console.log(data);
-      });
     // reset form state
     changeExpenseHeaderData(null, "reset");
-    //changeExpenseDetails(null, null, "reset");
+    changeExpenseDetails(null, null, "reset");
   }, [formData]);
 
   const handleExpenseFormSubmit = (e) => {
@@ -128,7 +134,8 @@ const ExpenseForm = () => {
         margin: "0 auto",
       }}
     >
-      <h1 className="mb-5">New Expense Entry</h1>
+      <h1 className="mb-5">Update Expense Entry</h1>
+      <p>ID: {location.state.id}</p>
       <form onSubmit={handleExpenseFormSubmit}>
         <Header
           {...expenseHeaderData}
@@ -137,7 +144,6 @@ const ExpenseForm = () => {
         <Details
           expenseTable={expenseTable}
           activeRow={activeRow}
-          rowNum={rowNum}
           changeExpenseDetails={changeExpenseDetails}
           addNewRow={addNewRow}
           deleteRow={deleteRow}
@@ -148,4 +154,4 @@ const ExpenseForm = () => {
   );
 };
 
-export default ExpenseForm;
+export default ExpenseUpdateForm;

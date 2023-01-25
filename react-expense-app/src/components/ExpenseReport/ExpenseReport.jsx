@@ -59,12 +59,12 @@ const ExpenseReport = () => {
     <div
       className="col-md-9"
       style={{
-        paddingTop: "50px",
+        paddingTop: "20px",
         margin: "0 auto",
       }}
     >
-      <h1 className="mb-5">Expense Report</h1>
-      <form onSubmit={handleSubmit} className="mb-5">
+      <h1 className="mb-3">Expense Report</h1>
+      <form onSubmit={handleSubmit} className="mb-3">
         <Filter
           createDateFrom={createDateFrom}
           setCreateDateFrom={setCreateDateFrom}
