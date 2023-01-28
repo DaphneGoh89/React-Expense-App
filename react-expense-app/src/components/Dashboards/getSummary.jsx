@@ -1,3 +1,4 @@
+import LineChart from "./LineChart";
 import { testExpenseRecordData } from "./testData";
 
 const monthNames = [
@@ -15,12 +16,12 @@ const monthNames = [
   "Dec",
 ];
 
-export const getExpenseByMonth = (fetchedData) => {
+export const getExpenseByMonth = (data) => {
   let recordsWithId = [];
 
   // looping through every key in the object -> get all required information from JSON data.
-  for (let record in /*testExpenseRecordData*/ fetchedData) {
-    const { amount, createDate } = fetchedData[record];
+  for (let record in data) {
+    const { amount, createDate } = data[record];
     let d = new Date(createDate);
     let monthName = monthNames[d.getMonth()];
 
@@ -65,8 +66,62 @@ export const getExpenseByMonth = (fetchedData) => {
   );
 
   return expenseByMonth;
-
-  //console.log("get summary - expenseByMonth", expenseByMonth);
 };
 
-export const getExpenseByCategory = () => {};
+//========================================================================================
+export const getExpenseByCategory = (data) => {
+  let recordsWithId = [];
+
+  // looping through every key in the object -> get all required information from JSON data.
+  for (let record in data) {
+    const { amount, createDate, details } = data[record];
+
+    let d = new Date(createDate);
+    let monthName = monthNames[d.getMonth()];
+
+    // information available for processing
+    recordsWithId.push({
+      id: record,
+      amount: amount,
+      details: details,
+      createDate: createDate,
+      createMonth: monthName,
+      createYear: d.getFullYear(),
+    });
+  }
+
+  // summarise expenses by category
+  const expenseByCategory = recordsWithId.reduce(
+    (expenseByCategory, record) => {
+      for (let line of record.details) {
+        if (
+          expenseByCategory.findIndex(
+            (element) =>
+              element.category.toUpperCase() === line.expenseType.toUpperCase()
+          ) === -1
+        ) {
+          let lineTotal = line.lineTotal;
+          expenseByCategory.push({
+            category: line.expenseType,
+            expenseTotal: lineTotal,
+          });
+        } else {
+          let i = expenseByCategory.findIndex(
+            (element) =>
+              element.category.toUpperCase() === line.expenseType.toUpperCase()
+          );
+          expenseByCategory[i] = {
+            ...expenseByCategory[i],
+            expenseTotal:
+              parseInt(expenseByCategory[i].expenseTotal) +
+              parseInt(line.lineTotal),
+          };
+        }
+      }
+
+      return expenseByCategory;
+    },
+    []
+  );
+  return expenseByCategory;
+};

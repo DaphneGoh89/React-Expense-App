@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+import useFetch from "../../customHooks/useFetch";
 import BarChart from "./BarChart";
 import PieChart from "./PieChart";
 import LineChart from "./LineChart";
-import useFetch from "../../customHooks/useFetch";
-import { getExpenseByMonth } from "./getSummary";
+import { getExpenseByMonth, getExpenseByCategory } from "./getSummary";
 
 const Dashboards = () => {
+  getExpenseByCategory();
   const firebaseURL =
     "https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords.json";
 
@@ -16,6 +17,7 @@ const Dashboards = () => {
   const { getData, data, loading, error } = useFetch();
   const [expenseRecords, setExpenseRecords] = useState([]);
   const [expenseSummaryByMonth, setExpenseSummaryByMonth] = useState([]);
+  const [expenseSummaryByCategory, setExpenseSummaryByCategory] = useState([]);
 
   useEffect(() => {
     getData(firebaseURL, requestOptions);
@@ -26,8 +28,10 @@ const Dashboards = () => {
   }, [data]);
 
   useEffect(() => {
-    let summarizedData = getExpenseByMonth(expenseRecords);
-    setExpenseSummaryByMonth(summarizedData);
+    let summaryByMonth = getExpenseByMonth(expenseRecords);
+    let summaryByCategory = getExpenseByCategory(expenseRecords);
+    setExpenseSummaryByMonth(summaryByMonth);
+    setExpenseSummaryByCategory(summaryByCategory);
   }, [expenseRecords]);
 
   return (
@@ -38,9 +42,11 @@ const Dashboards = () => {
             <BarChart data={expenseSummaryByMonth} />
           </div>
         )}
-        <div className="col-md-6">
-          <PieChart />
-        </div>
+        {expenseSummaryByCategory.length > 0 && (
+          <div className="col-md-6">
+            <PieChart data={expenseSummaryByCategory} />
+          </div>
+        )}
       </div>
       {expenseSummaryByMonth.length > 0 && (
         <div className="w-100 h-50">
