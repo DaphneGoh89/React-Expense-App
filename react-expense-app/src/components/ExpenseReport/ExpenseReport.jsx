@@ -1,14 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Filter from "./Filter";
 import ExpenseTable from "./ExpenseTable";
-import { useEffect } from "react";
 import useFetch from "../../customHooks/useFetch";
-// TODO: To show "no record found" if no data is retrieved
 
 const currDate = new Date().toISOString().split("T")[0];
 
 const ExpenseReport = () => {
-  // getData parameters
   const firebaseURL =
     "https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords.json";
 
@@ -18,14 +15,12 @@ const ExpenseReport = () => {
   };
   const { getData, data, loading, error } = useFetch();
 
-  // run getData when page loads
   const [createDateFrom, setCreateDateFrom] = useState(currDate);
   const [createDateTo, setCreateDateTo] = useState(currDate);
   const [supplier, setSupplier] = useState("");
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [expenseData, setExpenseData] = useState([]);
 
-  // call getData() when form is submitted
   useEffect(() => {
     getData(firebaseURL, requestOptions);
 
@@ -64,6 +59,7 @@ const ExpenseReport = () => {
       }}
     >
       <h1 className="mb-3">Expense Report</h1>
+
       <form onSubmit={handleSubmit} className="mb-3">
         <Filter
           createDateFrom={createDateFrom}

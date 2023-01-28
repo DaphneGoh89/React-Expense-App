@@ -1,26 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
+import { getExpenseByMonth } from "./getSummary";
 import { testBarChartData } from "./testData";
 
-// TODO :-
-// 1. Add chart title
-// 2. Add axis label
-// 3. Add filter
-// 4. Show expense by category
-
-const BarChart = () => {
+const BarChart = ({ data }) => {
   const expenseBarChartRef = useRef();
 
   useEffect(() => {
-    // 1. define margin and dimension
+    // margin definition
     const margin = { top: 40, right: 20, bottom: 10, left: 70 };
     let chartWidth =
       parseInt(d3.select("#expenseBarChart").style("width")) -
       margin.left -
       margin.right;
     let chartHeight = 350 - margin.top - margin.bottom;
-    console.log("barchart width", chartWidth, "barchart height", chartHeight);
 
-    // 2. create SVG
+    // chart dimension
     const svg = d3
       .select(expenseBarChartRef.current)
       .attr("width", chartWidth + margin.left + margin.right)
@@ -32,18 +26,41 @@ const BarChart = () => {
       .attr("height", "100%")
       .attr("fill", "white");
 
-    // 3(a). define x axis range (start to end position) and domain (values on axis)
+    // x-axis
     const x = d3
       .scaleBand()
       .range([margin.left, chartWidth + margin.left])
       .padding(0.3);
-    x.domain(testBarChartData.map((data) => data.month));
+    x.domain(data.map((d) => d.month));
 
-    // 3(b). define x axis range (start to end position) and domain (values on axis)
+    svg
+      .append("g")
+      .attr("transform", `translate(0, ${chartHeight})`)
+      .call(d3.axisBottom(x));
+
+    // y-axis
     const y = d3.scaleLinear().range([chartHeight, margin.top]);
-    y.domain([0, d3.max(testBarChartData, (data) => data.expenseTotal) + 100]);
+    y.domain([0, d3.max(data, (d) => parseInt(d.expenseTotal)) + 100]);
 
-    // 4(a). create chart title
+    svg
+      .append("g")
+      .attr("transform", `translate(${margin.left}, 0)`)
+      .call(d3.axisLeft(y));
+
+    // add bars to chart
+    svg
+      .attr("fill", "steelblue")
+      .attr("class", "bar")
+      .selectAll("rect")
+      .filter(".bar")
+      .data(data)
+      .join("rect")
+      .attr("x", (d) => x(d.month))
+      .attr("width", x.bandwidth())
+      .attr("y", (d) => y(parseInt(d.expenseTotal)))
+      .attr("height", (d) => y(0) - y(parseInt(d.expenseTotal)));
+
+    // chart title
     svg
       .append("text")
       .attr(
@@ -55,19 +72,7 @@ const BarChart = () => {
       .style("fill", "gray")
       .text("Expense Analysis By Period");
 
-    // 4(b). append x axis - move x axis down to bottom
-    svg
-      .append("g")
-      .attr("transform", `translate(0, ${chartHeight})`)
-      .call(d3.axisBottom(x));
-
-    // 4(c). append y axis - move y axis to the left
-    svg
-      .append("g")
-      .attr("transform", `translate(${margin.left}, 0)`)
-      .call(d3.axisLeft(y));
-
-    // 4(d). append label to x-axis
+    // x-label
     svg
       .append("text")
       .attr(
@@ -80,7 +85,7 @@ const BarChart = () => {
       .style("font-size", 12)
       .text("Period");
 
-    // add y-label
+    // y-label
     svg
       .append("text")
       .attr("text-anchor", "middle")
@@ -92,19 +97,6 @@ const BarChart = () => {
       )
       .style("font-size", 12)
       .text("Expense Amount ($)");
-
-    // 5. add bars to chart
-    svg
-      .attr("fill", "steelblue")
-      .attr("class", "bar")
-      .selectAll("rect")
-      .filter(".bar")
-      .data(testBarChartData)
-      .join("rect")
-      .attr("x", (data) => x(data.month))
-      .attr("width", x.bandwidth())
-      .attr("y", (data) => y(data.expenseTotal))
-      .attr("height", (data) => y(0) - y(data.expenseTotal));
   });
 
   return (

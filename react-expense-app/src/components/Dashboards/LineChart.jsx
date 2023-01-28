@@ -1,11 +1,10 @@
 import React, { useRef, useEffect } from "react";
-import { testBarChartData } from "./testData";
 
 const LineChart = ({ data }) => {
   const expenseLineChartRef = useRef();
 
   useEffect(() => {
-    // 1. define margin and dimension
+    // margin
     const margin = { top: 50, right: 20, bottom: 50, left: 70 };
     let chartWidth =
       parseInt(d3.select("#expenseLineChart").style("width")) -
@@ -16,7 +15,7 @@ const LineChart = ({ data }) => {
       margin.top -
       margin.bottom;
 
-    // 2. create SVG
+    // chart dimension
     const svg = d3
       .select(expenseLineChartRef.current)
       .attr("width", chartWidth + margin.left + margin.right)
@@ -24,9 +23,9 @@ const LineChart = ({ data }) => {
       .style("background", "white")
       .style("overflow", "visible");
 
-    // 3. create axes
+    // x-axis
     const x = d3.scalePoint().range([0, chartWidth]);
-    x.domain(testBarChartData.map((data) => data.month)); // TODO: to modify to include margin
+    x.domain(data.map((d) => d.month));
 
     svg
       .append("g")
@@ -36,35 +35,36 @@ const LineChart = ({ data }) => {
       )
       .call(d3.axisBottom(x));
 
+    // y-axis
     const y = d3.scaleLinear().range([chartHeight, 0]);
-    y.domain([0, d3.max(testBarChartData, (data) => data.expenseTotal)]);
+    y.domain([0, d3.max(data, (d) => parseInt(d.expenseTotal))]);
 
     svg
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`)
       .call(d3.axisLeft(y));
 
-    // create line
+    // append line
     const generateScaledLine = d3
       .line()
       .x((d) => x(d.month))
-      .y((d) => y(d.expenseTotal));
+      .y((d) => y(parseInt(d.expenseTotal)));
 
     svg
       .append("g")
       .selectAll("dot")
-      .data(testBarChartData)
+      .data(data)
       .enter()
       .append("circle")
       .attr("cx", (d) => x(d.month))
-      .attr("cy", (d) => y(d.expenseTotal))
+      .attr("cy", (d) => y(parseInt(d.expenseTotal)))
       .attr("r", 2)
       .attr("transform", `translate(${margin.left}, ${margin.top} )`)
       .style("fill", "#CC0000");
 
     svg
       .append("path")
-      .datum(testBarChartData)
+      .datum(data)
       .attr("class", "line")
       .attr("transform", `translate(${margin.left}, ${margin.top})`)
       .attr("d", generateScaledLine)
@@ -72,7 +72,7 @@ const LineChart = ({ data }) => {
       .style("stroke", "#CC0000")
       .style("stroke-width", "2");
 
-    // add title
+    // chart title
     svg
       .append("text")
       .attr("x", chartWidth / 2 + margin.left)
@@ -82,7 +82,7 @@ const LineChart = ({ data }) => {
       .style("font-size", 16)
       .text("Trend Analysis");
 
-    // add x-label
+    // x-label
     svg
       .append("text")
       .attr("x", chartWidth / 2 + margin.left)
@@ -91,7 +91,7 @@ const LineChart = ({ data }) => {
       .style("font-size", 12)
       .text("Period");
 
-    // add y-label
+    // y-label
     svg
       .append("text")
       .attr("text-anchor", "middle")

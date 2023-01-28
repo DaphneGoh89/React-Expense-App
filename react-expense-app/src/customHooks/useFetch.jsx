@@ -10,10 +10,10 @@ function useFetch(url, requestOptions) {
       const response = await fetch(url, requestOptions);
       const data = await response.json();
       setData(data);
-      setLoading(false);
     } catch (error) {
       setError(error.message);
     }
+    setLoading(false);
   };
 
   return { getData, loading, data, error };
