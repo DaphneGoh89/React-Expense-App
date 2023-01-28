@@ -3,10 +3,13 @@ import useFetch from "../../customHooks/useFetch";
 import BarChart from "./BarChart";
 import PieChart from "./PieChart";
 import LineChart from "./LineChart";
-import { getExpenseByMonth, getExpenseByCategory } from "./getSummary";
+import {
+  jsonDataNormalisation,
+  getExpenseByMonth,
+  getExpenseByCategory,
+} from "./getSummary";
 
 const Dashboards = () => {
-  getExpenseByCategory();
   const firebaseURL =
     "https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords.json";
 
@@ -28,8 +31,9 @@ const Dashboards = () => {
   }, [data]);
 
   useEffect(() => {
-    let summaryByMonth = getExpenseByMonth(expenseRecords);
-    let summaryByCategory = getExpenseByCategory(expenseRecords);
+    let normalizedData = jsonDataNormalisation(expenseRecords);
+    let summaryByMonth = getExpenseByMonth(normalizedData);
+    let summaryByCategory = getExpenseByCategory(normalizedData);
     setExpenseSummaryByMonth(summaryByMonth);
     setExpenseSummaryByCategory(summaryByCategory);
   }, [expenseRecords]);

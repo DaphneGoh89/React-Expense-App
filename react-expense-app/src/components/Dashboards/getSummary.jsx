@@ -1,5 +1,4 @@
 import LineChart from "./LineChart";
-import { testExpenseRecordData } from "./testData";
 
 const monthNames = [
   "Jan",
@@ -16,33 +15,32 @@ const monthNames = [
   "Dec",
 ];
 
-export const getExpenseByMonth = (data) => {
+//==================== jsonDataNormalisation =====================================//
+export const jsonDataNormalisation = (data) => {
   let recordsWithId = [];
 
-  // looping through every key in the object -> get all required information from JSON data.
   for (let record in data) {
-    const { amount, createDate } = data[record];
+    const { createDate } = data[record];
     let d = new Date(createDate);
-    let monthName = monthNames[d.getMonth()];
 
-    // information available for processing
     recordsWithId.push({
       id: record,
-      amount: amount,
-      createDate: createDate,
-      createMonth: monthName,
+      ...data[record],
+      createMonth: monthNames[d.getMonth()],
       createYear: d.getFullYear(),
     });
   }
+  return recordsWithId;
+};
 
-  // summarise expenses by month
+//==================== getExpenseByMonth =====================================//
+export const getExpenseByMonth = (recordsWithId) => {
   const expenseByMonth = recordsWithId.reduce(
     (expenseByMonth, record) => {
       if (
         expenseByMonth.findIndex(
           (element) => element.month === record.createMonth
-        ) === // monthName does not exist in array
-        -1
+        ) === -1
       ) {
         let expenseTotal = record.amount;
         expenseByMonth.push({
@@ -68,29 +66,8 @@ export const getExpenseByMonth = (data) => {
   return expenseByMonth;
 };
 
-//========================================================================================
-export const getExpenseByCategory = (data) => {
-  let recordsWithId = [];
-
-  // looping through every key in the object -> get all required information from JSON data.
-  for (let record in data) {
-    const { amount, createDate, details } = data[record];
-
-    let d = new Date(createDate);
-    let monthName = monthNames[d.getMonth()];
-
-    // information available for processing
-    recordsWithId.push({
-      id: record,
-      amount: amount,
-      details: details,
-      createDate: createDate,
-      createMonth: monthName,
-      createYear: d.getFullYear(),
-    });
-  }
-
-  // summarise expenses by category
+//==================== getExpenseByCategory =====================================//
+export const getExpenseByCategory = (recordsWithId) => {
   const expenseByCategory = recordsWithId.reduce(
     (expenseByCategory, record) => {
       for (let line of record.details) {

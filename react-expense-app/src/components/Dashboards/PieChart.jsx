@@ -31,7 +31,6 @@ const colors = [
 ];
 
 const PieChart = ({ data }) => {
-  console.log("piechart", data);
   const expensePieChartRef = useRef();
 
   useEffect(() => {
