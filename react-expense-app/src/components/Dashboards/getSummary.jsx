@@ -1,5 +1,3 @@
-import LineChart from "./LineChart";
-
 const monthNames = [
   "Jan",
   "Feb",

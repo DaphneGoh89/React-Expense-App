@@ -1,6 +1,5 @@
 import React from "react";
 import ExpenseTableLine from "./ExpenseTableLine";
-import { testExpenseRecords } from "./testExpenseRecords";
 
 const ExpenseTable = ({ data }) => {
   return (
