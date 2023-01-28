@@ -27,5 +27,3 @@ When fetching record from the expenseRecord collection, the following URL should
 https://react-expense-app-53969-default-rtdb.asia-southeast1.firebasedatabase.app/expenseRecords.json
 
 2. Dashboard creation: most of the time are spent on trying to understand how D3 works and the passing in of summarised expense data for charts creation.
-
-![React-Expense-App-components 001](https://user-images.githubusercontent.com/115914140/215257724-c167f55b-9d3c-4f14-8fc5-370060c32ea2.jpeg)
